@@ -110,12 +110,17 @@ btnTourSuivant.addEventListener("click", () => {
     if (action.historique.length > 20) action.historique.shift();
 
     const ligne = tableau.querySelector(`tr[data-action="${nom}"]`);
-    if (ligne) ligne.querySelector(".prix").innerText = action.prix.toFixed(2);
+    if (ligne) {
+      ligne.querySelector(".prix").innerText = action.prix.toFixed(2);
+      // Mettre à jour le statut des boutons
+      const boutons = ligne.querySelectorAll("button");
+      boutons.forEach((btn) => btn.disabled = action.bloque);
+    }
   });
 
   Object.values(actions).forEach((action) => (action.bloque = false));
 
-  chart.data.datasets.forEach((dataset, i) => {
+  chart.data.datasets.forEach((dataset) => {
     const nom = dataset.label;
     if (actions[nom]) dataset.data = actions[nom].historique;
   });
@@ -124,55 +129,73 @@ btnTourSuivant.addEventListener("click", () => {
   argentEl.innerText = argent.toFixed(2);
 });
 
-// Mise à jour de la quantité via les boutons "+"
+// Gestion des + / -
 document.querySelectorAll(".modifier-quantite").forEach((btn) => {
   btn.addEventListener("click", (e) => {
-    const action = e.target.dataset.action;
+    const nom = e.target.dataset.action;
+    const ligne = document.querySelector(`tr[data-action="${nom}"]`);
+    const spanQuantite = ligne.querySelector(".quantite");
+    let quantite = parseInt(spanQuantite.textContent) || 0;
     const change = parseInt(e.target.dataset.change);
-    const quantiteSpan = document.querySelector(`tr[data-action="${action}"] .quantite`);
-    let quantite = parseInt(quantiteSpan.textContent);
 
-    // Incrémentation ou décrémentation selon le bouton cliqué
     quantite += change;
-    if (quantite < 0) quantite = 0; // Pas de quantité négative
-    quantiteSpan.textContent = quantite;
+    if (quantite < 0) quantite = 0;
+
+    spanQuantite.textContent = quantite;
   });
 });
 
-// Action d'achat immédiat
+// Achat
 document.querySelectorAll(".acheter-btn").forEach((btn) => {
   btn.addEventListener("click", (e) => {
-    const action = actions[e.target.dataset.action];
-    const quantite = parseInt(e.target.parentElement.querySelector(".quantite").textContent || "0");
+    const nom = e.target.dataset.action;
+    const action = actions[nom];
+    const ligne = document.querySelector(`tr[data-action="${nom}"]`);
+    const quantite = parseInt(ligne.querySelector(".quantite").textContent) || 0;
+
+    if (action.bloque) {
+      ajouterEvenement(`🚫 Transactions gelées pour ${nom} ce tour.`);
+      return;
+    }
+
     const prixTotal = action.prix * quantite;
 
     if (quantite > 0 && argent >= prixTotal) {
       argent -= prixTotal;
       action.possede += quantite;
-      ajouterEvenement(`🛒 Achat de ${quantite} ${e.target.dataset.action} pour ${prixTotal.toFixed(2)}€.`);
-      e.target.parentElement.querySelector(".quantite").textContent = 0;
+      ligne.querySelector(".possede").textContent = action.possede;
+      ajouterEvenement(`🛒 Achat de ${quantite} ${nom} pour ${prixTotal.toFixed(2)}€.`);
+      ligne.querySelector(".quantite").textContent = 0;
     } else if (quantite > 0) {
-      ajouterEvenement(`⚠️ Pas assez d'argent pour acheter ${quantite} ${e.target.dataset.action}.`);
+      ajouterEvenement(`⚠️ Pas assez d'argent pour acheter ${quantite} ${nom}.`);
     }
 
     argentEl.innerText = argent.toFixed(2);
   });
 });
 
-// Action de vente immédiate
+// Vente
 document.querySelectorAll(".vendre-btn").forEach((btn) => {
   btn.addEventListener("click", (e) => {
-    const action = actions[e.target.dataset.action];
-    const quantite = parseInt(e.target.parentElement.querySelector(".quantite").textContent || "0");
+    const nom = e.target.dataset.action;
+    const action = actions[nom];
+    const ligne = document.querySelector(`tr[data-action="${nom}"]`);
+    const quantite = parseInt(ligne.querySelector(".quantite").textContent) || 0;
+
+    if (action.bloque) {
+      ajouterEvenement(`🚫 Transactions gelées pour ${nom} ce tour.`);
+      return;
+    }
 
     if (quantite > 0 && action.possede >= quantite) {
       const prixTotal = action.prix * quantite;
       argent += prixTotal;
       action.possede -= quantite;
-      ajouterEvenement(`💰 Vente de ${quantite} ${e.target.dataset.action} pour ${prixTotal.toFixed(2)}€.`);
-      e.target.parentElement.querySelector(".quantite").textContent = 0;
+      ligne.querySelector(".possede").textContent = action.possede;
+      ajouterEvenement(`💰 Vente de ${quantite} ${nom} pour ${prixTotal.toFixed(2)}€.`);
+      ligne.querySelector(".quantite").textContent = 0;
     } else if (quantite > 0) {
-      ajouterEvenement(`⚠️ Vous ne possédez pas ${quantite} ${e.target.dataset.action}.`);
+      ajouterEvenement(`⚠️ Vous ne possédez pas ${quantite} ${nom}.`);
     }
 
     argentEl.innerText = argent.toFixed(2);
