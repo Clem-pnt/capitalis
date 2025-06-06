@@ -33,9 +33,9 @@ let chart = new Chart(ctx, {
   },
   options: {
     scales: {
-      y: { beginAtZero: false }
-    }
-  }
+      y: { beginAtZero: false },
+    },
+  },
 });
 
 function randomAction() {
@@ -66,7 +66,7 @@ function evenementAleatoire() {
     },
     () => {
       let totalDividende = 0;
-      Object.keys(actions).forEach(nom => {
+      Object.keys(actions).forEach((nom) => {
         const dividende = Math.floor(actions[nom].prix * 0.015 * actions[nom].possede);
         argent += dividende;
         totalDividende += dividende;
@@ -76,7 +76,7 @@ function evenementAleatoire() {
       } else {
         ajouterEvenement(`🧾 Aucune dividende reçue (vous ne possédez aucune action).`);
       }
-    }
+    },
   ];
 
   if (Math.random() < 0.5) {
@@ -91,7 +91,7 @@ btnTourSuivant.addEventListener("click", () => {
 
   evenementAleatoire();
 
-  Object.keys(actions).forEach(nom => {
+  Object.keys(actions).forEach((nom) => {
     const action = actions[nom];
     const variation = parseFloat((Math.random() * 20 - 10).toFixed(2));
     action.prix = parseFloat((action.prix + variation).toFixed(2));
@@ -101,7 +101,7 @@ btnTourSuivant.addEventListener("click", () => {
       delete actions[nom];
       const ligne = tableau.querySelector(`tr[data-action="${nom}"]`);
       if (ligne) ligne.remove();
-      chart.data.datasets = chart.data.datasets.filter(ds => ds.label !== nom);
+      chart.data.datasets = chart.data.datasets.filter((ds) => ds.label !== nom);
       chart.update();
       return;
     }
@@ -113,7 +113,7 @@ btnTourSuivant.addEventListener("click", () => {
     if (ligne) ligne.querySelector(".prix").innerText = action.prix.toFixed(2);
   });
 
-  Object.values(actions).forEach(action => action.bloque = false);
+  Object.values(actions).forEach((action) => (action.bloque = false));
 
   chart.data.datasets.forEach((dataset, i) => {
     const nom = dataset.label;
@@ -124,31 +124,33 @@ btnTourSuivant.addEventListener("click", () => {
   argentEl.innerText = argent.toFixed(2);
 });
 
-document.querySelectorAll('.modifier-quantite').forEach(btn => {
-  btn.addEventListener('click', (e) => {
+document.querySelectorAll(".modifier-quantite").forEach((btn) => {
+  btn.addEventListener("click", (e) => {
     const action = e.target.dataset.action;
     const type = e.target.dataset.type;
     const change = parseInt(e.target.dataset.change);
     const quantiteSpan = document.querySelector(`tr[data-action="${action}"] .quantite-${type}`);
     let quantite = parseInt(quantiteSpan.textContent);
+    
+    // Incrémentation ou décrémentation selon le bouton cliqué
     quantite += change;
-    if (quantite < 0) quantite = 0;
+    if (quantite < 0) quantite = 0; // Pas de quantité négative
     quantiteSpan.textContent = quantite;
   });
 });
 
 // Action d'achat immédiat
-document.querySelectorAll('.acheter-btn').forEach(btn => {
-  btn.addEventListener('click', (e) => {
+document.querySelectorAll(".acheter-btn").forEach((btn) => {
+  btn.addEventListener("click", (e) => {
     const action = actions[e.target.dataset.action];
-    const quantite = parseInt(e.target.parentElement.querySelector('.quantite-acheter').textContent || "0");
+    const quantite = parseInt(e.target.parentElement.querySelector(".quantite-acheter").textContent || "0");
     const prixTotal = action.prix * quantite;
 
     if (quantite > 0 && argent >= prixTotal) {
       argent -= prixTotal;
       action.possede += quantite;
       ajouterEvenement(`🛒 Achat de ${quantite} ${e.target.dataset.action} pour ${prixTotal.toFixed(2)}€.`);
-      e.target.parentElement.querySelector('.quantite-acheter').textContent = 0;
+      e.target.parentElement.querySelector(".quantite-acheter").textContent = 0;
     } else if (quantite > 0) {
       ajouterEvenement(`⚠️ Pas assez d'argent pour acheter ${quantite} ${e.target.dataset.action}.`);
     }
@@ -158,17 +160,17 @@ document.querySelectorAll('.acheter-btn').forEach(btn => {
 });
 
 // Action de vente immédiate
-document.querySelectorAll('.vendre-btn').forEach(btn => {
-  btn.addEventListener('click', (e) => {
+document.querySelectorAll(".vendre-btn").forEach((btn) => {
+  btn.addEventListener("click", (e) => {
     const action = actions[e.target.dataset.action];
-    const quantite = parseInt(e.target.parentElement.querySelector('.quantite-vendre').textContent || "0");
+    const quantite = parseInt(e.target.parentElement.querySelector(".quantite-vendre").textContent || "0");
 
     if (quantite > 0 && action.possede >= quantite) {
       const prixTotal = action.prix * quantite;
       argent += prixTotal;
       action.possede -= quantite;
       ajouterEvenement(`💰 Vente de ${quantite} ${e.target.dataset.action} pour ${prixTotal.toFixed(2)}€.`);
-      e.target.parentElement.querySelector('.quantite-vendre').textContent = 0;
+      e.target.parentElement.querySelector(".quantite-vendre").textContent = 0;
     } else if (quantite > 0) {
       ajouterEvenement(`⚠️ Vous ne possédez pas ${quantite} ${e.target.dataset.action}.`);
     }
