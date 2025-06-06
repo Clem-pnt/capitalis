@@ -2,82 +2,87 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Capitalis — Jeu de Trading au Tour par Tour</title>
-  <link rel="stylesheet" href="styles.css" />
+  <title>Jeu de Bourse</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      font-family: sans-serif;
+      margin: 20px;
+      background: #f4f4f4;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1em;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 6px 10px;
+      text-align: center;
+    }
+    button {
+      padding: 4px 8px;
+      margin: 0 2px;
+      cursor: pointer;
+    }
+    .desactive {
+      background-color: #ddd;
+      color: #888;
+      cursor: not-allowed;
+    }
+  </style>
 </head>
 <body>
-  <h1><center>💼 Capitalis — Jeu de Trading au Tour par Tour</center></h1>
 
-  <div id="info-utilisateur">
-    <p>Argent : <span id="argent">1000</span>€</p>
-    <p>Tour : <span id="tour">1</span></p>
-  </div>
+  <h1>💹 Jeu de Bourse</h1>
+  <p><strong>Argent :</strong> <span id="argent">1000</span>€</p>
+  <p><strong>Tour :</strong> <span id="tour">1</span></p>
 
-  <div id="marché">
-    <table id="tableau-actions">
-      <thead>
-        <tr>
-          <th>Action</th>
-          <th>Prix</th>
-          <th>Possédé</th>
-          <th>Quantité</th>
-          <th>Acheter</th>
-          <th>Vendre</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr data-action="TechCorp">
-          <td>TechCorp</td>
-          <td><span class="prix">100.00</span>€</td>
-          <td><span class="possede">0</span></td>
-          <td>
-            <!-- Un champ de quantité modifiable avec les boutons + et - -->
-            <button class="modifier-quantite" data-action="TechCorp" data-change="1">+</button>
-            <span class="quantite">0</span>
-            <button class="modifier-quantite" data-action="TechCorp" data-change="-1">-</button>
-          </td>
-          <td>
-            <button class="acheter-btn" data-action="TechCorp">Acheter</button>
-          </td>
-          <td>
-            <button class="vendre-btn" data-action="TechCorp">Vendre</button>
-          </td>
-        </tr>
-        <tr data-action="HealthInc">
-          <td>HealthInc</td>
-          <td><span class="prix">120.00</span>€</td>
-          <td><span class="possede">0</span></td>
-          <td>
-            <!-- Un champ de quantité modifiable avec les boutons + et - -->
-            <button class="modifier-quantite" data-action="HealthInc" data-change="1">+</button>
-            <span class="quantite">0</span>
-            <button class="modifier-quantite" data-action="HealthInc" data-change="-1">-</button>
-          </td>
-          <td>
-            <button class="acheter-btn" data-action="HealthInc">Acheter</button>
-          </td>
-          <td>
-            <button class="vendre-btn" data-action="HealthInc">Vendre</button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+  <table id="tableau-actions">
+    <thead>
+      <tr>
+        <th>Entreprise</th>
+        <th>Prix</th>
+        <th>Possédé</th>
+        <th>Quantité</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr data-action="TechCorp">
+        <td>TechCorp</td>
+        <td class="prix">100</td>
+        <td class="possede">0</td>
+        <td><span class="quantite">0</span></td>
+        <td>
+          <button class="modifier-quantite" data-action="TechCorp" data-change="-1">-</button>
+          <button class="modifier-quantite" data-action="TechCorp" data-change="1">+</button>
+          <button class="acheter-btn" data-action="TechCorp">Acheter</button>
+          <button class="vendre-btn" data-action="TechCorp">Vendre</button>
+        </td>
+      </tr>
+      <tr data-action="HealthInc">
+        <td>HealthInc</td>
+        <td class="prix">120</td>
+        <td class="possede">0</td>
+        <td><span class="quantite">0</span></td>
+        <td>
+          <button class="modifier-quantite" data-action="HealthInc" data-change="-1">-</button>
+          <button class="modifier-quantite" data-action="HealthInc" data-change="1">+</button>
+          <button class="acheter-btn" data-action="HealthInc">Acheter</button>
+          <button class="vendre-btn" data-action="HealthInc">Vendre</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
 
-    <div style="margin-top: 10px;">
-      <button id="tour-suivant">Passer au tour suivant</button>
-    </div>
-  </div>
+  <button id="tour-suivant">Tour suivant</button>
 
-  <div style="margin-top: 30px;">
-    <canvas id="graphique-prix" width="800" height="400"></canvas>
-  </div>
+  <h2>📈 Historique des Prix</h2>
+  <canvas id="graphique-prix" width="600" height="300"></canvas>
 
-  <div id="fil-evenements" style="margin-top: 40px; padding: 20px; background: #f9f9f9; border: 1px solid #ccc; max-width: 800px; margin: 40px auto;">
-    <h3>📰 Événements récents</h3>
-    <ul id="liste-evenements" style="list-style-type: none; padding-left: 0; text-align: left;"></ul>
-  </div>
+  <h2>📰 Événements</h2>
+  <ul id="liste-evenements"></ul>
 
   <script src="script.js"></script>
 </body>
