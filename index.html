@@ -22,6 +22,7 @@
           <th>Action</th>
           <th>Prix</th>
           <th>Possédé</th>
+          <th>Quantité</th>
           <th>Acheter</th>
           <th>Vendre</th>
         </tr>
@@ -32,17 +33,15 @@
           <td><span class="prix">100.00</span>€</td>
           <td><span class="possede">0</span></td>
           <td>
-            <!-- Boutons de modification de la quantité pour l'achat -->
-            <button class="modifier-quantite" data-action="TechCorp" data-type="acheter" data-change="1">+</button>
-            <span class="quantite-acheter">0</span>
-            <button class="modifier-quantite" data-action="TechCorp" data-type="acheter" data-change="-1">-</button>
+            <!-- Un champ de quantité modifiable avec les boutons + et - -->
+            <button class="modifier-quantite" data-action="TechCorp" data-change="1">+</button>
+            <span class="quantite">0</span>
+            <button class="modifier-quantite" data-action="TechCorp" data-change="-1">-</button>
+          </td>
+          <td>
             <button class="acheter-btn" data-action="TechCorp">Acheter</button>
           </td>
           <td>
-            <!-- Boutons de modification de la quantité pour la vente -->
-            <button class="modifier-quantite" data-action="TechCorp" data-type="vendre" data-change="1">+</button>
-            <span class="quantite-vendre">0</span>
-            <button class="modifier-quantite" data-action="TechCorp" data-type="vendre" data-change="-1">-</button>
             <button class="vendre-btn" data-action="TechCorp">Vendre</button>
           </td>
         </tr>
@@ -51,17 +50,15 @@
           <td><span class="prix">120.00</span>€</td>
           <td><span class="possede">0</span></td>
           <td>
-            <!-- Boutons de modification de la quantité pour l'achat -->
-            <button class="modifier-quantite" data-action="HealthInc" data-type="acheter" data-change="1">+</button>
-            <span class="quantite-acheter">0</span>
-            <button class="modifier-quantite" data-action="HealthInc" data-type="acheter" data-change="-1">-</button>
+            <!-- Un champ de quantité modifiable avec les boutons + et - -->
+            <button class="modifier-quantite" data-action="HealthInc" data-change="1">+</button>
+            <span class="quantite">0</span>
+            <button class="modifier-quantite" data-action="HealthInc" data-change="-1">-</button>
+          </td>
+          <td>
             <button class="acheter-btn" data-action="HealthInc">Acheter</button>
           </td>
           <td>
-            <!-- Boutons de modification de la quantité pour la vente -->
-            <button class="modifier-quantite" data-action="HealthInc" data-type="vendre" data-change="1">+</button>
-            <span class="quantite-vendre">0</span>
-            <button class="modifier-quantite" data-action="HealthInc" data-type="vendre" data-change="-1">-</button>
             <button class="vendre-btn" data-action="HealthInc">Vendre</button>
           </td>
         </tr>
